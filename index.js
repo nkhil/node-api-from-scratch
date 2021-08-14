@@ -3,13 +3,14 @@ const quotes = require('./data/quotes.json');
 const PORT = 8080;
 
 const server = http.createServer((req, res) => {
-  if (req.url === '/random-quote') {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    const random = Math.floor(Math.random() * quotes.length);
-    res.end(`<h1>${quotes[random]}</h1>`);
+  if (req.url === '/random-quote' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    const randomNum = Math.floor(Math.random() * quotes.length);
+    res.end(JSON.stringify({ quote: quotes[randomNum] }));
   } else {
-    res.writeHead(404, { 'Content-Type': 'text/html' });
-    res.end('<h1>Not Found!</h1><p>Try visiting /random-quote</p>');
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    const errorResponse = { message: 'Not Found!' };
+    res.end(JSON.stringify(errorResponse));
   }
 });
 
